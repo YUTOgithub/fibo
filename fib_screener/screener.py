@@ -105,24 +105,28 @@ def calculate_fib_50(wave: dict) -> dict:
 
 def screen_single_stock(
     df: pd.DataFrame,
-    lookback: int = 120,
+    lookback_years: int = 5,
     tolerance_pct: int = 5,
 ) -> dict | None:
     """単一銘柄に対してフィボナッチ50%スクリーニングを実行する。
 
     Args:
         df: 日足OHLCVデータ
-        lookback: 分析に使用する直近日数（デフォルト: 120）
+        lookback_years: 分析に使用する年数（デフォルト: 5）
         tolerance_pct: 許容乖離率%（デフォルト: 5）
 
     Returns:
         スクリーニング結果dictまたはNone（条件不一致・データ不足時）
     """
-    if len(df) < lookback:
+    # 年数を営業日数に変換（1年≒245営業日）
+    lookback_days = lookback_years * 245
+
+    # 利用可能なデータ量で絞る（最低30日必要）
+    if len(df) < 30:
         return None
 
-    # 直近N日に絞る
-    recent = df.tail(lookback).copy()
+    # 直近N日に絞る（データが足りない場合は全量使用）
+    recent = df.tail(lookback_days).copy()
     recent = recent.reset_index(drop=True)
 
     # スイングポイント検出

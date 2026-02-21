@@ -44,7 +44,7 @@ selected_industries = st.sidebar.multiselect(
     default=[],
 )
 
-lookback = st.sidebar.slider("分析期間（日数）", 60, 180, 120)
+lookback_years = st.sidebar.slider("分析期間（年）", 1, 5, 5)
 tolerance = st.sidebar.slider("許容乖離率（%）", 1, 10, 5)
 
 # フィルタ適用
@@ -57,8 +57,8 @@ st.sidebar.metric("対象銘柄数", len(filtered))
 # --- 説明 ---
 with st.expander("スクリーニング方法について"):
     st.markdown(f"""
-- 過去 **{lookback}日間** の日足データからスイングハイ・スイングローを検出（前後5本比較）
-- 直近のスイングハイとスイングローのペア（直近の波）を特定
+- 過去 **{lookback_years}年間** の日足データからスイングハイ・スイングローを検出（前後5本比較）
+- 直近のスイングハイとスイングローのペア（直近の一波）を特定
 - **フィボナッチ50%水準**（安値 +（高値 - 安値）× 0.5）を算出
 - 現在の終値が50%水準の **±{tolerance}%以内** にある銘柄を抽出
     """)
@@ -88,7 +88,7 @@ if run_button:
                 continue
 
             result = screen_single_stock(
-                df, lookback=lookback, tolerance_pct=tolerance
+                df, lookback_years=lookback_years, tolerance_pct=tolerance
             )
             if result is not None:
                 result["証券コード"] = code

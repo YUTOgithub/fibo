@@ -60,12 +60,12 @@ def fetch_stock_list() -> pd.DataFrame:
 
 
 @st.cache_data(ttl=86400, show_spinner=False)
-def fetch_price_data(ticker: str, period: str = "1y") -> pd.DataFrame | None:
+def fetch_price_data(ticker: str, period: str = "5y") -> pd.DataFrame | None:
     """yfinanceで個別銘柄の日足データを取得する。
 
     Args:
         ticker: ティッカーシンボル（例: "7203.T"）
-        period: 取得期間（デフォルト: "1y"）
+        period: 取得期間（デフォルト: "5y"）
 
     Returns:
         OHLCV DataFrameまたはNone（取得失敗・データ不足時）
